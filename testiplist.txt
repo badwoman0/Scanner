@@ -1,0 +1,130 @@
+├── aix
+│   ├── local
+│   ├── rpc_cmsd_opcode21.rb
+│   └── rpc_ttdbserverd_realpath.rb
+├── android
+│   ├── adb
+│   ├── browser
+│   ├── fileformat
+│   └── local
+├── apple_ios
+│   ├── browser
+│   ├── email
+├── bsd
+│   └── finger
+├── bsdi
+│   └── softcart
+├── dialup
+│   └── multi
+├── firefox
+│   └── local
+├── freebsd
+│   ├── local
+│   ├── misc
+│   ├── samba
+│   ├── tacacs
+│   └── webapp
+├── hpux
+│   └── lpd
+├── irix
+│   └── lpd
+├── linux
+│   ├── antivirus
+│   ├── browser
+│   ├── fileformat
+│   ├── games
+│   ├── ids
+│   ├── local
+│   ├── misc
+│   ├── proxy
+│   ├── redis
+│   ├── samba
+│   ├── snmp
+├── multi
+│   ├── browser
+│   ├── elasticsearch
+│   ├── fileformat
+│   ├── gdb
+│   ├── hams
+│   ├── ids
+│   ├── kubernetes
+│   ├── local
+│   ├── misc
+│   ├── ntp
+│   ├── php
+│   ├── realserver
+│   ├── samba
+│   ├── sap
+│   ├── scada
+│   ├── script
+│   ├── svn
+│   ├── vpn
+│   └── wyse
+├── netware
+│   ├── smb
+│   └── sunrpc
+├── openbsd
+│   └── local
+├── osx
+│   ├── arkeia
+│   ├── browser
+│   ├── email
+│   ├── local
+│   ├── mdns
+│   ├── misc
+│   └── samba
+├── qnx
+│   ├── local
+│   └── qconn
+├── solaris
+│   ├── dtspcd
+│   ├── local
+│   ├── lpd
+│   ├── samba
+│   ├── sunrpc
+├── unix
+│   ├── dhcp
+│   ├── fileformat
+│   ├── irc
+│   ├── local
+│   ├── misc
+│   ├── sonicwall
+│   ├── webapp
+└── windows
+    ├── antivirus
+    ├── arkeia
+    ├── backdoor
+    ├── backupexec
+    ├── brightstor
+    ├── browser
+    ├── email
+    ├── emc
+    ├── fileformat
+    ├── firewall
+    ├── games
+    ├── ibm
+    ├── iis
+    ├── isapi
+    ├── ldap
+    ├── license
+    ├── local
+    ├── lotus
+    ├── lpd
+    ├── misc
+    ├── mmsp
+    ├── motorola
+    ├── nfs
+    ├── nimsoft
+    ├── novell
+    ├── nuuo
+    ├── oracle
+    ├── proxy
+    ├── sage
+    ├── scada
+    ├── smb
+    ├── ssl
+    ├── tftp
+    ├── unicenter
+    ├── vpn
+    ├── winrm
+    └── wins
