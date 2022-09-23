@@ -1,7 +1,8 @@
-package protocolScaner
+package protocolscanner
 
 import (
 	"crypto/tls"
+	"fmt"
 	"net"
 	"strconv"
 	"time"
@@ -33,7 +34,9 @@ func TcpConn(payload []byte, ip string, port int, timeout time.Duration) ([]byte
 
 }
 
-func TcpConnSSL(payload []byte, ip string, port int, timeout time.Duration) ([]byte, error) {
+func TcpConnSSL(payload []byte, ip string, port int, timeout time.Duration) ([]byte, string, error) {
+
+	var certRes string
 	conf := &tls.Config{
 		InsecureSkipVerify: true,
 	}
@@ -41,21 +44,41 @@ func TcpConnSSL(payload []byte, ip string, port int, timeout time.Duration) ([]b
 
 	conn, err := tls.DialWithDialer(&net.Dialer{Timeout: timeout}, "tcp", ip+":"+portStr, conf)
 	if err != nil {
-		return []byte(""), err
+		return []byte(""), certRes, err
 	}
+	certs := conn.ConnectionState().PeerCertificates
+	if len(certs) != 0 {
+		cert := certs[0]
+		certRes += fmt.Sprintf("Version: %v\n", cert.Version)
+		certRes += fmt.Sprintf("SerialNumber: %v\n", cert.SerialNumber)
+		certRes += fmt.Sprintf("Issuer: %v\n", cert.Issuer)
+		certRes += fmt.Sprintf("Subject: %v\n", cert.Subject)
+		certRes += fmt.Sprintf("NotBefore: %v\n", cert.NotBefore)
+		certRes += fmt.Sprintf("NotAfter: %v\n", cert.NotAfter)
+		certRes += fmt.Sprintf("KeyUsage: %v\n", cert.KeyUsage)
+		for _, OCSPServer := range cert.OCSPServer {
+			certRes += fmt.Sprintf("OCSPServer: %v\n", OCSPServer)
+		}
+		for _, CertificateURL := range cert.IssuingCertificateURL {
+			certRes += fmt.Sprintf("IssuingCertificateURL: %v\n", CertificateURL)
+		}
+		for _, DNSNames := range cert.DNSNames {
+			certRes += fmt.Sprintf("DNSNames: %v\n", DNSNames)
+		}
+	}
+
 	defer conn.Close()
 	_, err = conn.Write([]byte(payload))
 	if err != nil {
-		return []byte(""), err
+		return []byte(""), certRes, err
 	}
 	buf := make([]byte, 10240)
 
 	serverMsg, err := conn.Read(buf)
 	if err != nil {
-		return []byte(""), err
+		return []byte(""), certRes, err
 	}
-
-	return buf[:serverMsg], nil
+	return buf[:serverMsg], certRes, nil
 }
 
 func UdpConn(payload []byte, ip string, port int, timeout time.Duration) ([]byte, error) {

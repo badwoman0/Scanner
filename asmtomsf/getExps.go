@@ -77,10 +77,10 @@ var SupportProtocols = []ProtocolToMsfPath{
 	{
 		Protocols: []string{"telnet"},
 		MsfPaths: []string{
-			"freebsd/smtp",
-			"linux/smtp",
-			"solaris/smtp",
-			"windows/smtp",
+			"freebsd/telnet",
+			"linux/telnet",
+			"solaris/telnet",
+			"windows/telnet",
 		},
 	},
 	{

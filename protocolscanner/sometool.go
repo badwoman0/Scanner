@@ -1,7 +1,8 @@
-package protocolScaner
+package protocolscanner
 
 import (
 	"bytes"
+	"regexp"
 	"sort"
 )
 
@@ -23,8 +24,9 @@ func matchPattern(pattern string, keyword []byte, body []byte) bool {
 		}
 
 	case "regex":
-		// todo:需要编写正则匹配规则的逻辑
-		break
+		match, _ := regexp.Match(string(keyword), body)
+
+		return match
 
 	default:
 		return false
@@ -74,8 +76,10 @@ func GetPortsRange() ([]int, []int, map[int][]string, map[int][]string) {
 		tcpkeys = append(tcpkeys, k)
 	}
 	sort.Ints(tcpkeys)
+
+	// todo 需要将贪婪扫描模式改为可配置
 	// 索引0的意思是对于不在端口范围内的端口采用top50协议的payload进行探测
-	tcpPortRange[0] = []string{"http", "https", "rtsp", "mysql"}
+	tcpPortRange[0] = []string{"rdp", "http", "https", "msrpc", "mysql", "pptp", "rtsp", "sip", "smtp", "smtps", "ssh", "telnet", "imap", "pop3", "vnc", "postgres", "mssql", "bgp"}
 	for _, k := range tcpkeys {
 		tcpPortRange[k] = tcpPortRangeTemp[k]
 
@@ -87,7 +91,7 @@ func GetPortsRange() ([]int, []int, map[int][]string, map[int][]string) {
 	}
 	sort.Ints(udpkeys)
 	// 索引0的意思是对于不在端口范围内的端口采用top50协议的payload进行探测
-	udpPortRange[0] = []string{"ntp"}
+	udpPortRange[0] = []string{"ntp", "upnp"}
 
 	for _, k := range udpkeys {
 		udpPortRange[k] = udpPortRangeTemp[k]

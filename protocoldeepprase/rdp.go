@@ -1,0 +1,5 @@
+package protocoldeepprase
+
+func RdpDeepPrase() {
+
+}

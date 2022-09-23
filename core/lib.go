@@ -1,12 +1,13 @@
 package core
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
 	"github.com/talentsec/levscanner/asmtomsf"
 	"github.com/talentsec/levscanner/devicescanner"
-	"github.com/talentsec/levscanner/protocolScaner"
+	"github.com/talentsec/levscanner/protocolscanner"
 )
 
 type Asset struct {
@@ -59,10 +60,10 @@ func GetExps(res IpDetails) []string {
 	return asmtomsf.OtherMsfPathes
 }
 
-func ProtocolScan(ip string, port int, transport string, timeout time.Duration) protocolScaner.ProtocolResult {
-	tcpkeys, udpkeys, tcpPortRange, udpPortRange := protocolScaner.GetPortsRange()
+func ProtocolScan(ip string, port int, transport string, timeout time.Duration) protocolscanner.ProtocolResult {
+	tcpkeys, udpkeys, tcpPortRange, udpPortRange := protocolscanner.GetPortsRange()
 
-	var protocolresult protocolScaner.ProtocolResult
+	var protocolresult protocolscanner.ProtocolResult
 	switch transport {
 	case "tcp":
 		//判断要扫描的tcp端口是否在我们定义的协议端口中
@@ -70,28 +71,28 @@ func ProtocolScan(ip string, port int, transport string, timeout time.Duration) 
 		for _, v := range tcpkeys {
 			if port == v {
 				//在定义的端口里的逻辑
-				protocolresult = protocolScaner.Tcpscanner(ip, port, tcpPortRange[port], timeout)
+				protocolresult = protocolscanner.Tcpscanner(ip, port, tcpPortRange[port], timeout)
 				if protocolresult.Protocol == "" {
-					protocolresult = protocolScaner.Tcpscanner(ip, port, tcpPortRange[0], timeout)
+					protocolresult = protocolscanner.Tcpscanner(ip, port, tcpPortRange[0], timeout)
 				}
 				return protocolresult
 			}
 		}
-		protocolresult = protocolScaner.Tcpscanner(ip, port, tcpPortRange[0], timeout)
+		protocolresult = protocolscanner.Tcpscanner(ip, port, tcpPortRange[0], timeout)
 		return protocolresult
 	case "udp":
 		//判断要扫描的udp端口是否在我们定义的协议端口中
 		for _, v := range udpkeys {
 			if port == v {
 				//在定义的端口里的逻辑
-				protocolresult = protocolScaner.Udpscanner(ip, port, udpPortRange[port], timeout)
+				protocolresult = protocolscanner.Udpscanner(ip, port, udpPortRange[port], timeout)
 				if protocolresult.Protocol == "" {
-					protocolresult = protocolScaner.Udpscanner(ip, port, tcpPortRange[0], timeout)
+					protocolresult = protocolscanner.Udpscanner(ip, port, udpPortRange[0], timeout)
 				}
 				return protocolresult
 			}
 		}
-		protocolresult = protocolScaner.Udpscanner(ip, port, udpPortRange[0], timeout)
+		protocolresult = protocolscanner.Udpscanner(ip, port, udpPortRange[0], timeout)
 		return protocolresult
 
 	}
@@ -110,8 +111,10 @@ func Scan(ip string, port int, transport string, timeout time.Duration) IpDetail
 	result.Port = a.Port
 	result.Transport = a.Transport
 	result.Protocol = a.Protocol
+	result.Cert = a.Cert
+	result.SSL = a.IsSsL
 	if result.Protocol == "http" || result.Protocol == "https" {
-		wpd := protocolScaner.WebProtocolPraser(string(a.Body))
+		wpd := protocolscanner.WebProtocolPraser(string(a.Body))
 		result.IsWeb = true
 		result.Body = wpd.Body
 		result.Banner = wpd.Banner
@@ -121,9 +124,9 @@ func Scan(ip string, port int, transport string, timeout time.Duration) IpDetail
 		result.Title = wpd.Title
 
 	} else {
-		result.Body = string(a.Body)
+		result.Body = fmt.Sprintf("%q", a.Body)
 	}
-
+	result.Banner = result.Body
 	waitParse = devicescanner.Resp{
 		RespBody:     result.Body,
 		RespBanner:   result.Banner,
@@ -141,8 +144,8 @@ func Scan(ip string, port int, transport string, timeout time.Duration) IpDetail
 				Id:               k.Id,
 				Product:          k.Info.Product,
 				ProductUrl:       k.Info.ProductUrl,
-				FirstCategoryId:  k.Info.FirstCategoryId,
-				SecondCategoryId: k.Info.SecondCategoryId,
+				FirstCategoryId:  devicescanner.Category[k.Info.FirstCategoryId],
+				SecondCategoryId: devicescanner.Category[k.Info.SecondCategoryId],
 				Company:          k.Info.Company,
 				SoftHardCode:     k.Soft,
 				LevelCode:        k.Level,

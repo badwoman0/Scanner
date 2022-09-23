@@ -1,4 +1,4 @@
-package protocolScaner
+package protocolscanner
 
 import (
 	"regexp"
