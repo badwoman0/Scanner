@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/talentsec/levscanner/asmtomsf"
-	"github.com/talentsec/levscanner/devicescanner"
-	"github.com/talentsec/levscanner/protocolscanner"
+	"github.com/qingwei-wym/Scanner/asmtomsf"
+	"github.com/qingwei-wym/Scanner/devicescanner"
+	"github.com/qingwei-wym/Scanner/protocolscanner"
 )
 
 type Asset struct {

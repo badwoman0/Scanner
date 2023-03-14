@@ -1,4 +1,4 @@
-module github.com/talentsec/levscanner
+module github.com/qingwei-wym/Scanner
 
 go 1.18
 
